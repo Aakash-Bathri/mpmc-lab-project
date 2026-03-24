@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AlertCircle, Clock, CheckCircle2 } from "lucide-react";
+import { AlertCircle, Clock, CheckCircle2, Download } from "lucide-react";
 
 type VehicleLog = {
     id: string;
@@ -66,6 +66,37 @@ export default function DashboardPage() {
         }
     };
 
+    const downloadCSV = () => {
+        if (logs.length === 0) return;
+
+        const headers = ["ID", "Plate Number", "Owner Name", "Driving License", "Entry Time", "Exit Time", "Is NITT Exempt"];
+        
+        const rows = logs.map(log => [
+            log.id,
+            log.plateNumber,
+            log.ownerName || "",
+            log.drivingLicense || "",
+            new Date(log.entryTime).toLocaleString(),
+            log.exitTime ? new Date(log.exitTime).toLocaleString() : "Still inside",
+            log.isNITTExempt ? "Yes" : "No"
+        ]);
+
+        const csvContent = [
+            headers.join(","),
+            ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(","))
+        ].join("\n");
+
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", `vehicle_logs_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+
     return (
         <div className="space-y-6 max-w-5xl mx-auto">
             <div className="flex justify-between items-end">
@@ -73,12 +104,22 @@ export default function DashboardPage() {
                     <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Security Dashboard</h1>
                     <p className="text-slate-500 dark:text-slate-400 mt-2">Monitor all vehicles currently inside the campus.</p>
                 </div>
-                <button
-                    onClick={fetchLogs}
-                    className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-sm font-medium transition-colors"
-                >
-                    Refresh Data
-                </button>
+                <div className="flex gap-3">
+                    <button
+                        onClick={downloadCSV}
+                        className="flex items-center gap-2 px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-lg text-sm font-medium transition-colors shadow-sm"
+                        title="Download Logs as CSV"
+                    >
+                        <Download className="h-4 w-4" />
+                        Export
+                    </button>
+                    <button
+                        onClick={fetchLogs}
+                        className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-sm font-medium transition-colors"
+                    >
+                        Refresh Data
+                    </button>
+                </div>
             </div>
 
             {loading ? (

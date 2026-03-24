@@ -48,7 +48,7 @@ export default function ScannerPage() {
 
                 // Match Indian Number Plate: TN 45 AB 1234 or TN45AB1234
                 // Adding more flexibility for slightly flawed OCR
-                const plateRegex = /[A-Z]{2}[-\s]?[0-9]{1,2}[-\s]?[A-Z]{1,2}[-\s]?[0-9]{4}/g;
+                const plateRegex = /[A-Z]{2}[-\s]?[0-9]{1,2}[-\s]?[A-Z]{1,3}[-\s]?[0-9]{1,4}/g;
                 const matches = cleanText.match(plateRegex);
 
                 if (matches && matches.length > 0) {
@@ -97,6 +97,25 @@ export default function ScannerPage() {
     const handleManualSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setSubmitStatus("loading");
+
+        // Validate Indian Number Plate format strictly
+        const strictPlateRegex = /^[A-Z]{2}[-\s]?[0-9]{1,2}[-\s]?[A-Z]{1,3}[-\s]?[0-9]{1,4}$/i;
+        if (!strictPlateRegex.test(plateNumber.trim())) {
+            setSubmitStatus("error");
+            setSubmitMessage("Invalid Vehicle Number format (e.g., TN01AB1234)");
+            return;
+        }
+
+        // Validate Indian Driving License format strictly (if provided)
+        // Format: 2 Letters, 2 Digits, Optional Space, 11 Digits
+        if (drivingLicense.trim()) {
+            const dlRegex = /^[A-Z]{2}[0-9]{2}( )?[0-9]{11}$/i;
+            if (!dlRegex.test(drivingLicense.trim())) {
+                setSubmitStatus("error");
+                setSubmitMessage("Invalid Driving License format (e.g., TN01 20220000000)");
+                return;
+            }
+        }
 
         try {
             const res = await fetch("/api/logs", {
