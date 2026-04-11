@@ -185,7 +185,12 @@ export default function ScannerPage() {
                         {/* Outline guide box */}
                         {!capturedImage && (
                             <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-                                <div className="w-[90%] h-[40%] border-4 border-dashed border-white/50 rounded-lg shadow-[0_0_0_9999px_rgba(0,0,0,0.4)]"></div>
+                                <div className="w-[90%] h-[40%] border-2 border-brand-400/80 rounded-xl shadow-[0_0_0_9999px_rgba(15,23,42,0.85)] animate-scan flex items-center justify-center overflow-hidden">
+                                    <div className="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-brand-400 rounded-tl-xl"></div>
+                                    <div className="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-brand-400 rounded-tr-xl"></div>
+                                    <div className="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-brand-400 rounded-bl-xl"></div>
+                                    <div className="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-brand-400 rounded-br-xl"></div>
+                                </div>
                             </div>
                         )}
                     </div>
@@ -221,22 +226,24 @@ export default function ScannerPage() {
                 </div>
 
                 {/* Data Form */}
-                <div className="glass rounded-2xl p-6 border border-slate-200 dark:border-slate-800 h-fit">
-                    <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                        <Database className="h-5 w-5 text-brand-500" />
+                <div className="glass rounded-3xl p-8 border border-slate-200 dark:border-slate-800 h-fit shadow-xl shadow-slate-200/50 dark:shadow-none">
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-8 flex items-center gap-3">
+                        <div className="p-2 bg-brand-100 dark:bg-brand-900/40 rounded-xl">
+                            <Database className="h-6 w-6 text-brand-600 dark:text-brand-400" />
+                        </div>
                         Entry Details
                     </h2>
 
                     <form onSubmit={handleManualSubmit} className="space-y-5">
                         <div>
-                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Plate Number</label>
+                            <label className="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Plate Number</label>
                             <input
                                 type="text"
                                 value={plateNumber}
                                 onChange={e => setPlateNumber(e.target.value)}
                                 required
                                 placeholder="e.g. TN45AB1234"
-                                className="w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 dark:text-white font-mono uppercase tracking-widest text-lg transition-colors"
+                                className="w-full px-5 py-4 bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-4 focus:ring-brand-500/20 focus:border-brand-500 dark:text-white font-mono uppercase tracking-widest text-lg transition-all shadow-sm"
                             />
                         </div>
 
@@ -248,31 +255,31 @@ export default function ScannerPage() {
                         )}
 
                         <div>
-                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Driver Name (Optional)</label>
+                            <label className="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Driver Name <span className="text-slate-400 dark:text-slate-500 font-normal">(Optional)</span></label>
                             <input
                                 type="text"
                                 value={ownerName}
                                 onChange={e => setOwnerName(e.target.value)}
                                 placeholder="Enter full name"
-                                className="w-full px-4 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 dark:text-white transition-colors"
+                                className="w-full px-5 py-3 bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-4 focus:ring-brand-500/20 focus:border-brand-500 dark:text-white transition-all shadow-sm"
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Driving License (Optional)</label>
+                            <label className="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Driving License <span className="text-slate-400 dark:text-slate-500 font-normal">(Optional)</span></label>
                             <input
                                 type="text"
                                 value={drivingLicense}
                                 onChange={e => setDrivingLicense(e.target.value)}
                                 placeholder="License ID string"
-                                className="w-full px-4 py-2 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 dark:text-white transition-colors uppercase font-mono"
+                                className="w-full px-5 py-3 bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-4 focus:ring-brand-500/20 focus:border-brand-500 dark:text-white transition-all uppercase font-mono shadow-sm"
                             />
                         </div>
 
                         <button
                             type="submit"
                             disabled={submitStatus === "loading" || !plateNumber}
-                            className="w-full py-3 bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 dark:text-slate-900 text-white font-bold rounded-xl shadow-md transition-colors disabled:opacity-50 flex justify-center items-center gap-2"
+                            className="w-full py-4 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-500 hover:to-indigo-500 text-white font-bold rounded-2xl shadow-lg shadow-brand-500/30 transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-500/40 disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none flex justify-center items-center gap-2 mt-4"
                         >
                             {submitStatus === "loading" ? <Loader2 className="h-5 w-5 animate-spin" /> : <CheckCircle className="h-5 w-5" />}
                             Log Vehicle Entry
