@@ -10,7 +10,6 @@ type VehicleLog = {
     drivingLicense: string | null;
     entryTime: string;
     exitTime: string | null;
-    isNITTExempt: boolean;
 };
 
 export default function DashboardPage() {

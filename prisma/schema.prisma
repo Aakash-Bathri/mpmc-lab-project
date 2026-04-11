@@ -15,5 +15,4 @@ model VehicleLog {
   drivingLicense String?
   entryTime      DateTime  @default(now())
   exitTime       DateTime?
-  isNITTExempt   Boolean   @default(false)
 }

@@ -14,7 +14,7 @@ export default function ScannerPage() {
 
     // OCR & Form State
     const [plateNumber, setPlateNumber] = useState("");
-    const [isNITTExempt, setIsNITTExempt] = useState(false);
+
     const [ownerName, setOwnerName] = useState("");
     const [drivingLicense, setDrivingLicense] = useState("");
     const [ocrText, setOcrText] = useState("");
@@ -71,12 +71,7 @@ export default function ScannerPage() {
                     }
                 }
 
-                // Check for NITT logo / text match
-                if (cleanText.includes("NITT") || cleanText.includes("NATIONAL INSTITUTE OF TECHNOLOGY")) {
-                    setIsNITTExempt(true);
-                } else {
-                    setIsNITTExempt(false);
-                }
+
             } catch (err) {
                 console.error("OCR Failed", err);
             } finally {
@@ -89,7 +84,6 @@ export default function ScannerPage() {
         setCapturedImage(null);
         setProcessedImage(null);
         setPlateNumber("");
-        setIsNITTExempt(false);
         setOcrText("");
         setSubmitStatus("idle");
     };
@@ -124,8 +118,7 @@ export default function ScannerPage() {
                 body: JSON.stringify({
                     plateNumber,
                     ownerName,
-                    drivingLicense,
-                    isNITTExempt
+                    drivingLicense
                 })
             });
 
@@ -247,12 +240,6 @@ export default function ScannerPage() {
                             />
                         </div>
 
-                        {isNITTExempt && (
-                            <div className="flex items-center gap-3 p-3 border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20 rounded-xl">
-                                <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
-                                <span className="font-medium text-green-800 dark:text-green-300 text-sm">Valid NITT Campus Vehicle Detected</span>
-                            </div>
-                        )}
 
                         <div>
                             <label className="block text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Driver Name <span className="text-slate-400 dark:text-slate-500 font-normal">(Optional)</span></label>

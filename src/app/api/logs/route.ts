@@ -18,7 +18,7 @@ export async function GET() {
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { plateNumber, ownerName, drivingLicense, isNITTExempt } = body;
+        const { plateNumber, ownerName, drivingLicense } = body;
 
         if (!plateNumber) {
             return NextResponse.json({ error: 'Plate number is required' }, { status: 400 });
@@ -50,7 +50,6 @@ export async function POST(request: Request) {
                 plateNumber: plateNumber.toUpperCase(),
                 ownerName,
                 drivingLicense,
-                isNITTExempt: isNITTExempt || false,
             },
         });
 
