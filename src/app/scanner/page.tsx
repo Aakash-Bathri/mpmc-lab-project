@@ -11,6 +11,7 @@ export default function ScannerPage() {
     const [capturedImage, setCapturedImage] = useState<string | null>(null);
     const [processedImage, setProcessedImage] = useState<string | null>(null);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [facingMode, setFacingMode] = useState<"environment" | "user">("environment");
 
     // OCR & Form State
     const [plateNumber, setPlateNumber] = useState("");
@@ -158,12 +159,19 @@ export default function ScannerPage() {
                                 ref={webcamRef}
                                 screenshotFormat="image/jpeg"
                                 videoConstraints={{
-                                    facingMode: "environment",
+                                    facingMode,
                                     width: { ideal: 1920 },
                                     height: { ideal: 1080 }
                                 }}
                                 onUserMediaError={(err: any) => {
                                     console.error("Webcam access error:", err);
+                                    if (facingMode === "environment" && (err.name === "OverconstrainedError" || err.name === "NotAllowedError")) {
+                                        console.log("Environment camera failed. Falling back to user camera.");
+                                        setFacingMode("user");
+                                        setSubmitMessage("");
+                                        setSubmitStatus("idle");
+                                        return;
+                                    }
                                     if (typeof err === "string" || err instanceof String) {
                                         setSubmitMessage(`Camera Error: ${err}`);
                                     } else {
@@ -199,13 +207,22 @@ export default function ScannerPage() {
 
                     <div className="flex justify-center gap-4">
                         {!capturedImage ? (
-                            <button
-                                onClick={captureAndAnalyze}
-                                className="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white px-6 py-3 rounded-full font-bold shadow-lg shadow-brand-500/30 transition-all hover:scale-105"
-                            >
-                                <Camera className="h-5 w-5" />
-                                Capture & Scan
-                            </button>
+                            <>
+                                <button
+                                    onClick={captureAndAnalyze}
+                                    className="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white px-6 py-3 rounded-full font-bold shadow-lg shadow-brand-500/30 transition-all hover:scale-105"
+                                >
+                                    <Camera className="h-5 w-5" />
+                                    Capture & Scan
+                                </button>
+                                <button
+                                    onClick={() => setFacingMode(prev => prev === "environment" ? "user" : "environment")}
+                                    className="flex items-center gap-2 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-white px-4 py-3 rounded-full font-bold transition-all"
+                                    title="Flip Camera"
+                                >
+                                    <RefreshCw className="h-5 w-5" />
+                                </button>
+                            </>
                         ) : (
                             <button
                                 onClick={retake}
