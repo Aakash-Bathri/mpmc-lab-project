@@ -158,9 +158,18 @@ export default function ScannerPage() {
                                 ref={webcamRef}
                                 screenshotFormat="image/jpeg"
                                 videoConstraints={{
-                                    facingMode: "environment",
+                                    facingMode: { ideal: "environment" },
                                     width: { ideal: 1920 },
                                     height: { ideal: 1080 }
+                                }}
+                                onUserMediaError={(err: any) => {
+                                    console.error("Webcam access error:", err);
+                                    if (typeof err === "string" || err instanceof String) {
+                                        setSubmitMessage(`Camera Error: ${err}`);
+                                    } else {
+                                        setSubmitMessage(`Camera Error: ${err.name || err.message || "Unknown error"}. Please check browser permissions.`);
+                                    }
+                                    setSubmitStatus("error");
                                 }}
                                 className="w-full h-full object-cover"
                             />
