@@ -158,7 +158,7 @@ export default function ScannerPage() {
                                 ref={webcamRef}
                                 screenshotFormat="image/jpeg"
                                 videoConstraints={{
-                                    facingMode: { ideal: "environment" },
+                                    facingMode: "environment",
                                     width: { ideal: 1920 },
                                     height: { ideal: 1080 }
                                 }}
