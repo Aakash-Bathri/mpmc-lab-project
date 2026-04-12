@@ -1,5 +1,3 @@
-// src/lib/image-processing.ts
-
 /**
  * Preprocess the image to increase OCR accuracy for Tesseract.
  * Applies Grayscale, Contrast enhancement, Binarization/Thresholding, and a native Deskew approximation.

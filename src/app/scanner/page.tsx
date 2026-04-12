@@ -47,9 +47,9 @@ export default function ScannerPage() {
                 // 3. Extract Plate Number and Exemption
                 const cleanText = text.replace(/\n/g, ' ').toUpperCase();
 
-                // Match Indian Number Plate: TN 45 AB 1234 or TN45AB1234
-                // Adding more flexibility for slightly flawed OCR
-                const plateRegex = /[A-Z]{2}[-\s]?[0-9]{1,2}[-\s]?[A-Z]{1,3}[-\s]?[0-9]{1,4}/g;
+                // Match Comprehensive Indian Number Plates
+                // Adding flexibility ([-\s]?) for flawed OCR spacing
+                const plateRegex = /([A-Z]{2}[-\s]?[0-9]{1,2}[-\s]?[A-Z]{1,3}[-\s]?[0-9]{1,4}|[0-9]{2}[-\s]?BH[-\s]?[0-9]{4}[-\s]?[A-Z]{2}|T[-\s]?[0-9]{4}[-\s]?[A-Z]{2}|[0-9]{2}[-\s]?CD[-\s]?[0-9]{4}|[0-9]{2}[-\s]?UN[-\s]?[0-9]{4}|[0-9]{2}[-\s]?CC[-\s]?[0-9]{4}|[0-9]{2}[-\s]?[A-Z]{1,2}[-\s]?[0-9]{4})/g;
                 const matches = cleanText.match(plateRegex);
 
                 if (matches && matches.length > 0) {
@@ -93,9 +93,10 @@ export default function ScannerPage() {
         e.preventDefault();
         setSubmitStatus("loading");
 
-        // Validate Indian Number Plate format strictly
-        const strictPlateRegex = /^[A-Z]{2}[-\s]?[0-9]{1,2}[-\s]?[A-Z]{1,3}[-\s]?[0-9]{1,4}$/i;
-        if (!strictPlateRegex.test(plateNumber.trim())) {
+        // Validate Indian Number Plate format strictly with comprehensive regex
+        const cleanPlate = plateNumber.replace(/[-\s]/g, '').toUpperCase();
+        const strictPlateRegex = /^([A-Z]{2}[0-9]{1,2}[A-Z]{1,3}[0-9]{1,4}|[0-9]{2}BH[0-9]{4}[A-Z]{2}|T[0-9]{4}[A-Z]{2}|[0-9]{2}CD[0-9]{4}|[0-9]{2}UN[0-9]{4}|[0-9]{2}CC[0-9]{4}|[0-9]{2}[A-Z]{1,2}[0-9]{4})$/i;
+        if (!strictPlateRegex.test(cleanPlate)) {
             setSubmitStatus("error");
             setSubmitMessage("Invalid Vehicle Number format (e.g., TN01AB1234)");
             return;
